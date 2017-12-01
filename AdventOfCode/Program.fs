@@ -1,5 +1,4 @@
-﻿// Learn more about F# at http://fsharp.org
-// See the 'F# Tutorial' project for more help.
+﻿// http://adventofcode.com/2017
 
 [<EntryPoint>]
 let main argv = 

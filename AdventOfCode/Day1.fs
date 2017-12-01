@@ -1,4 +1,6 @@
-﻿module Day1
+﻿// http://adventofcode.com/2017/day/1
+
+module Day1
 
 let getLast (list : 'a list) = list.[list.Length - 1]
 
@@ -11,7 +13,7 @@ let repeateds (str : string) =
                 |> List.map string
     circularPairwise chars
     |> List.filter (fun (a, b) -> a = b)
-    |> List.map ((fun t -> fst t) >> int)
+    |> List.map (fst >> int)
 
 
 let main = 
