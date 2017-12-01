@@ -1,0 +1,10 @@
+c:\users\aron adler\source\repos\AdventOfCode\AdventOfCode\bin\Debug\AdventOfCode.exe.config
+c:\users\aron adler\source\repos\AdventOfCode\AdventOfCode\bin\Debug\AdventOfCode.XML
+c:\users\aron adler\source\repos\AdventOfCode\AdventOfCode\bin\Debug\AdventOfCode.exe
+c:\users\aron adler\source\repos\AdventOfCode\AdventOfCode\bin\Debug\AdventOfCode.pdb
+c:\users\aron adler\source\repos\AdventOfCode\AdventOfCode\bin\Debug\FSharp.Core.dll
+c:\users\aron adler\source\repos\AdventOfCode\AdventOfCode\bin\Debug\System.ValueTuple.dll
+c:\users\aron adler\source\repos\AdventOfCode\AdventOfCode\bin\Debug\FSharp.Core.xml
+c:\users\aron adler\source\repos\AdventOfCode\AdventOfCode\obj\Debug\AdventOfCode.fsproj.CoreCompileInputs.cache
+c:\users\aron adler\source\repos\AdventOfCode\AdventOfCode\obj\Debug\AdventOfCode.exe
+c:\users\aron adler\source\repos\AdventOfCode\AdventOfCode\obj\Debug\AdventOfCode.pdb
