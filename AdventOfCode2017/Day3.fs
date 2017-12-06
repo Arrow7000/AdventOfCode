@@ -1,6 +1,7 @@
 ﻿module Day3
 
 type Coord = (int * int)
+
 type Corner =
     | TopLeft of Coord
     | TopRight of Coord
@@ -13,17 +14,12 @@ type Side =
     | Bottom of Coord
     | Left of Coord
 
-let getShellNum coord =
-    [fst coord; snd coord]
-    |> List.map abs
-    |> List.max
-
-let numsPerShellSide shellNum = 1 + shellNum * 2
+let origin = 0,0
 
 let isCorner coord =
     abs (fst coord) = abs (snd coord)
 
-let whichCorner (coord : Coord) : Corner = 
+let whichCorner coord = 
     if abs (fst coord) = abs (snd coord) then
         match coord with
         | (x, y) when x > 0 && y > 0 -> BottomRight coord
@@ -33,7 +29,7 @@ let whichCorner (coord : Coord) : Corner =
         | _ -> failwith "Doesn't match any corner"
     else failwith "Is not corner!"
 
-let whichSide coord : Side =
+let whichSide coord =
     match coord with
     | (x, y) when x > abs y -> Right coord
     | (x, y) when y < -(abs x) -> Top coord
@@ -45,10 +41,9 @@ let whichSide coord : Side =
 
 let nextStep coord =
     match coord with
-    | (0, 0) -> (1, 0)
+    | 0,0 -> 1,0
     | coord when isCorner coord -> 
         match whichCorner coord  with
-        //| BottomRight (x, y) -> (x + 1, y) // proceed along x axis, as this is where it goes to next outer shell
         | TopRight (x, y) -> (x - 1, y)
         | TopLeft (x, y) -> (x, y + 1)
         | BottomLeft (x, y) | BottomRight (x, y) -> (x + 1, y)
@@ -59,7 +54,7 @@ let nextStep coord =
         | Left (x, y) -> (x, y + 1)
         | Bottom (x, y) -> (x + 1, y)
 
-let stepper n : Coord =
+let stepper n =
     let rec stepIter nLeft start =
         if nLeft < 1 then failwith "Smallest square is 1"
         else if nLeft = 1 then
