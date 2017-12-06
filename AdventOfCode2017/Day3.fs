@@ -45,12 +45,13 @@ let whichSide coord : Side =
 
 let nextStep coord =
     match coord with
+    | (0, 0) -> (1, 0)
     | coord when isCorner coord -> 
-        match whichCorner coord with
-        | BottomRight (x, y) -> (x, y - 1)
+        match whichCorner coord  with
+        //| BottomRight (x, y) -> (x + 1, y) // proceed along x axis, as this is where it goes to next outer shell
         | TopRight (x, y) -> (x - 1, y)
         | TopLeft (x, y) -> (x, y + 1)
-        | BottomLeft (x, y) -> (x + 1, y)
+        | BottomLeft (x, y) | BottomRight (x, y) -> (x + 1, y)
     | _ ->
         match whichSide coord with
         | Right (x, y) -> (x, y - 1)
@@ -60,11 +61,18 @@ let nextStep coord =
 
 let stepper n : Coord =
     let rec stepIter nLeft start =
-        if nLeft = 0 then
+        if nLeft < 1 then failwith "Smallest square is 1"
+        else if nLeft = 1 then
             start
         else
             stepIter (nLeft - 1) (nextStep start)
-    stepIter n (0 ,0)
+    stepIter n (0, 0)
+
+let taxiDist coord = 
+    [fst; snd]
+    |> List.map ((fun get -> get coord) >> abs)
+    |> List.sum
 
 
 let main = 
+    stepper 277678 |> taxiDist
