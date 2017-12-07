@@ -1,4 +1,6 @@
-﻿module Day4
+﻿// http://adventofcode.com/2017/day/4
+
+module Day4
 
 open System.IO
 

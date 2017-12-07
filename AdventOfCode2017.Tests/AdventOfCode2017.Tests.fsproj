@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Day3Test.fs" />
+    <Compile Include="Day5Test.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

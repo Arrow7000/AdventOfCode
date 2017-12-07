@@ -1,4 +1,6 @@
-﻿module Day3
+﻿// http://adventofcode.com/2017/day/3
+
+module Day3
 
 type Coord = (int * int)
 
@@ -71,3 +73,6 @@ let taxiDist coord =
 
 let main = 
     stepper 277678 |> taxiDist
+
+
+//let part2 =
