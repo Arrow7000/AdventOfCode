@@ -13,33 +13,13 @@ type Entry = {
     children: Name list
     }
 
-//type TreeEntry = {
-//    name: string
-//    weight: int
-//    children: Map<string, Entry option>
-//    }
-
-//type EntryOrName =
-//    | Entry of Entry
-//    | Name of string
-
-
-//let childToMapItem child : string * Entry option =
-//    match child with
-//    | Entry entry -> (entry.name, Some entry)
-//    | Name entry -> (entry, None)
-
-//let makeEntry name weight (children : EntryOrName list) =
-//    let mapEntries = List.map childToMapItem children
-
-//    let entryMap = 
-//        (new Map<string, Entry option>(mapEntries))
-//    {
-//        name = name
-//        weight = weight
-//        children = entryMap
-//    }
-
+type TreeEntry = {
+    name: string
+    weight: int
+    totalWeight: int
+    children: Map<string, TreeEntry>
+    descendants: Map<string, TreeEntry>
+    }
 
 let makeEntry name weight children : Entry =
     {
@@ -75,8 +55,8 @@ let (|LineEntryMatch|_|) line =
             name.Value
             (int weight.Value)
             (match children with
-             | Some children -> children
-             | None -> [])
+            | Some children -> children
+            | None -> [])
 
 let parseLineToEntry line =
     match line with
@@ -87,3 +67,55 @@ let linesToEntries lines =
     lines
     |> List.map parseLineToEntry
     |> List.choose id
+
+let constructEntryMap (entryList : Entry list) =
+    let namedTuples = 
+        List.map (fun (entry : Entry) -> entry.name, entry) entryList
+    new Map<string, Entry>(namedTuples)
+
+
+let mapToList = Map.toList >> List.map snd
+
+let rec convertEntryToTreeEntry (map : Map<string, Entry>) (entry : Entry) : TreeEntry =
+    let childList = List.map (fun child -> convertEntryToTreeEntry map map.[child]) entry.children
+
+    let childTupleList = List.map (fun child -> child.name, child) childList
+    let childMap = new Map<string, TreeEntry>(childTupleList)
+
+    let descendantList = 
+        childList
+        |> List.map ((fun entry -> entry.descendants) >> mapToList)
+        |> List.fold (@) []
+
+    let descendantTupleList = List.map (fun child -> child.name, child) descendantList
+    let descendantMap = new Map<string, TreeEntry>(descendantTupleList)
+
+    {
+        name = entry.name
+        children = childMap
+        descendants = descendantMap
+        weight = entry.weight
+        totalWeight = 
+            if childMap.Count < 1 then
+                entry.weight
+            else
+                mapToList childMap
+                |> List.map (fun entry -> entry.totalWeight)
+                |> List.sum
+     }
+
+let constructWholeTree map (entries : Entry list) =
+    entries
+    |> List.map (convertEntryToTreeEntry map)
+    |> List.maxBy (fun entry -> entry.totalWeight) // heaviest subtree should be full tree
+
+
+
+let main =
+    let entries =
+        getLines "./day7.txt"
+        |> List.map parseLineToEntry
+        |> List.choose id
+    let map = constructEntryMap entries
+    let tree = constructWholeTree map entries
+    tree.name
