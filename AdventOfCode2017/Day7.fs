@@ -77,7 +77,7 @@ let rec convertEntryToTreeEntry (map : Map<string, SimpleEntry>) (entry : Simple
     let descendantList = 
         childList
         |> List.map (fun entry -> entry.descendants)
-        |> List.fold (@) []
+        |> List.fold (@) childList
 
     { name = entry.name
       ownChildren = childList
@@ -108,5 +108,38 @@ let main =
     tree.name
 
 
+let getWeight entry = entry.ownWeight
 
-//let part2 =
+let getUnBalanced (tree : TreeEntry) =
+    let rec traverser tree =
+        let children = tree.ownChildren
+        let distinct =
+            children
+            |> List.groupBy (fun entry -> entry.ownWeight)
+            |> List.distinctBy fst
+            |> List.length
+            |> (<) 1
+
+        //let max = List.maxBy getWeight children
+        //let min = List.minBy getWeight children
+        //let hasDiff = max > min
+        //if hasDiff then
+        //    let highVotes = List.filter (fun entry -> entry.ownWeight = max) children
+        //    let lowVotes = List.filter (fun entry -> entry.ownWeight = min) children
+        
+        //    List.groupBy
+        //else
+        //    None
+
+        
+    traverser tree
+
+
+
+let part2 =
+    let entries =
+        getLines "./day7.txt"
+        |> List.map parseLineToEntry
+        |> List.choose id
+    let map = constructEntryMap entries
+    let tree = constructWholeTree map entries
