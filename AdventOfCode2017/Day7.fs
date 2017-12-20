@@ -26,6 +26,9 @@ type TreeEntry = {
 
 let makeEntry name weight children = { name = name; weight = weight; children = children }
 
+let getOwnWeight entry = entry.ownWeight
+let getTotalWeight entry = entry.totalWeight
+
 let getLines file =
     File.ReadAllLines file
     |> Array.toList
@@ -82,7 +85,7 @@ let rec convertEntryToTreeEntry (map : Map<string, SimpleEntry>) (entry : Simple
 
     let descendantWeight =
         childList
-        |> List.map (fun entry -> entry.totalWeight)
+        |> List.map getTotalWeight
         |> List.sum
 
 
@@ -100,7 +103,7 @@ let rec convertEntryToTreeEntry (map : Map<string, SimpleEntry>) (entry : Simple
 let constructWholeTree map (entries : SimpleEntry list) =
     entries
     |> List.map (convertEntryToTreeEntry map)
-    |> List.maxBy (fun entry -> entry.totalWeight) // heaviest subtree will be the root tree
+    |> List.maxBy getTotalWeight // heaviest subtree will be the root tree
 
 
 
@@ -114,57 +117,57 @@ let main =
     tree.name
 
 
-let getWeight entry = entry.ownWeight
 
-//let getUnBalanced (tree : TreeEntry) =
-//    let rec traverser tree =
-//        let childCount = tree.ownChildren.Length
-//        if childCount > 0 && childCount < 3 then
-//            printf "Tree has %i children\n" childCount
-//            if childCount = 2 then
-//                let w1 = tree.ownChildren.[0].totalWeight
-//                let w2 = tree.ownChildren.[1].totalWeight
-//                if w1 <> w2 then
-//                    printf "  Child 1 weighs %i, child 2 weighs %i\n" w1 w2
-//        List.map traverser tree.ownChildren |> ignore
-//        ()
-//    traverser tree
-//    0
 
 type Number = int
-let getOddOneOut (getter : 'a -> Number) (items : 'a list) : 'a option =
-    let countGroups =
-        items
-        |> List.countBy getter
-    
+let getOddWithCommonNum (getter : 'a -> Number) (items : 'a list) : ('a * Number) option =
     if items.Length < 3 then
         None
     else
-        let oddWeight = 
-            countGroups
-            |> List.find (fun group -> snd group = 1)
-            |> fst
-
-        items
-        |> List.find (fun item -> getter item = oddWeight)
-        |> Some
-
-
-
-let getUnBalanced (tree : TreeEntry) =
-    let rec traverser isInsideOdd tree =
-        let children = tree.ownChildren
-        let childCount = children.Length
-        if childCount < 2 then
+        let countGroups =
+            items
+            |> List.countBy getter
+    
+        if countGroups.Length < 2 then
             None
         else
-            let oddOne = getOddOneOut getWeight children
-            match oddOne with
-            | None -> None
-            | Some odd -> 
-                Some (List.choose (traverser true) children)
+            let oddWeight = 
+                countGroups
+                |> List.find (fun group -> snd group = 1)
+                |> fst
+
+            let majWeight = 
+                countGroups
+                |> List.find (fun group -> snd group > 1)
+                |> fst
+
+            let oddItem =
+                items
+                |> List.find (fun item -> getter item = oddWeight)
+
+            Some (oddItem, majWeight)
+
+
+
+let getCorrectOwnWeight siblingTotalWeight childrenTotalWeights : Weight =
+    siblingTotalWeight - List.sum childrenTotalWeights
+
+let getUnBalanced (tree : TreeEntry) =
+    let rec traverser isInsideOdd siblingWeight tree =
+        let children = tree.ownChildren
+        let oddNCommon = getOddWithCommonNum getTotalWeight children
+        match oddNCommon with
+        | None -> 
+            if not isInsideOdd then // is not inside odd and no children are unbalanced, so no reason to continue branching
+                failwith "Shouldn't be recursing inside balanced branches of the tree"
+            else // all children are equal and we are inside an odd one! this is where we need to finish and return correct weight from
+                children
+                |> List.map getTotalWeight
+                |> getCorrectOwnWeight siblingWeight
+        | Some (oddOne, common) ->
+            traverser true common oddOne
     
-    traverser tree
+    traverser false 0 tree
 
 
 let part2 =
