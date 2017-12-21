@@ -153,21 +153,18 @@ let getCorrectOwnWeight siblingTotalWeight childrenTotalWeights : Weight =
     siblingTotalWeight - List.sum childrenTotalWeights
 
 let getUnBalanced (tree : TreeEntry) =
-    let rec traverser isInsideOdd siblingWeight tree =
+    let rec traverser siblingWeight tree =
         let children = tree.ownChildren
         let oddNCommon = getOddWithCommonNum getTotalWeight children
         match oddNCommon with
-        | None -> 
-            if not isInsideOdd then // is not inside odd and no children are unbalanced, so no reason to continue branching
-                failwith "Shouldn't be recursing inside balanced branches of the tree"
-            else // all children are equal and we are inside an odd one! this is where we need to finish and return correct weight from
-                children
-                |> List.map getTotalWeight
-                |> getCorrectOwnWeight siblingWeight
+        | None ->
+            children
+            |> List.map getTotalWeight
+            |> getCorrectOwnWeight siblingWeight
         | Some (oddOne, common) ->
-            traverser true common oddOne
+            traverser common oddOne
     
-    traverser false 0 tree
+    traverser 0 tree
 
 
 let part2 =
