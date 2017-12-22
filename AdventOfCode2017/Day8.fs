@@ -79,15 +79,18 @@ let lineToOp line =
 let getAllRegisters ops : Register list =
     ops
     |> List.map (fun op -> op.Register, op.ConditionRegister)
-    |> List.reduce (fun a b -> [fst a; snd a; fst b; snd b])
+    |> List.map (fun item -> [fst item; snd item])
+    |> List.reduce (@)
     |> List.distinct
 
 
 
 let main =
-    let map = new Map<Register, RegisterVal>()
+    //let map = new Map<Register, RegisterVal>()
     let ops =
         getLines "./day8.txt"
         |> List.map lineToOp
 
+    let registers = getAllRegisters ops
+    registers.Length
     

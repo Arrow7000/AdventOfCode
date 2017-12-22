@@ -10,6 +10,6 @@ let getLines file =
 let getText file =
     File.ReadAllText file
 
-let strSplit sep str =
-    str.Split([| sep |]))
+let strSplit sep (str : string) =
+    str.Split([| sep |])
     |> Array.toList
