@@ -10,52 +10,44 @@ type Register = string
 type RegisterVal = int
 type OpType = Inc | Dec
 type OpVal = int
-type AppliedCond = Register -> bool
-type Condition = Register -> AppliedCond
-//type CompareOp = 
-//    | Gt of Condition
-//    | Lt of Condition
-//    | Gte of Condition
-//    | Lte of Condition
-//    | Eq of Condition
-//    | Neq of Condition
+type CompareType = Gt | Lt | Gte | Lte | Eq | Neq
+type AppliedCond = RegisterVal -> bool
+type Condition = RegisterVal -> AppliedCond
 
 let getOp opStr =
     match opStr with
     | "inc" -> Inc
     | "dec" -> Dec
     | _ -> failwith "Not a valid register operation"
-
-let executeOp op reg opVal : RegisterVal =
-    let operation =
-        match op with
-        | Inc -> (+)
-        | Dec -> (-)
-    operation reg opVal
-
-let getCompareOp opStr : Condition =
+    
+let getCompareOp opStr : CompareType =
     match opStr with
-    | ">" -> (>)
-    | "<" -> (<)
-    | ">=" -> (>=)
-    | "<=" -> (<=)
-    | "==" -> (=)
-    | "!=" -> (<>)
-    | _-> failwith "Not a valid operation"
+    | ">" -> Gt
+    | "<" -> Lt
+    | ">=" -> Gte
+    | "<=" -> Lte
+    | "==" -> Eq
+    | "!=" -> Neq
+    | _-> failwith "Not a valid comparison operator"
 
-//let strToCompareop str =
-//    match str with
-//    | CompareOp op -> Op
-//    | _ -> failwith "Is not valid operation"
+let compareOpToCondition compareType : Condition =
+    match compareType with
+    | Gt -> (>)
+    | Lt -> (<)
+    | Gte -> (>=)
+    | Lte -> (<=)
+    | Eq -> (=)
+    | Neq -> (<>)
+    
 
 type Op =
     {
         Register: Register
         OpType: OpType
         OpVal: RegisterVal
-        ConditionRegister: Register
-        CompareOp: Condition
-        CompareVal: Register
+        CompareRegister: Register
+        CompareOp: CompareType
+        CompareVal: RegisterVal
     }
 
 let lineToOp line =
@@ -64,33 +56,70 @@ let lineToOp line =
     let mat = Regex.Match(line, reg)
     let getGr (i : int) = mat.Groups.[i].Value
     let register, opType, opVal, condReg, compareOp, compareVal =
-        getGr 1, getOp (getGr 2), int (getGr 3), getGr 4, getCompareOp (getGr 5), getGr 6
+        getGr 1, getOp (getGr 2), int (getGr 3), getGr 4, getCompareOp (getGr 5), int (getGr 6)
     
     {
         Register = register
         OpType = opType
         OpVal = opVal
-        ConditionRegister = condReg
+        CompareRegister = condReg
         CompareOp = compareOp
         CompareVal = compareVal
     }
+    
 
 
 let getAllRegisters ops : Register list =
     ops
-    |> List.map (fun op -> op.Register, op.ConditionRegister)
+    |> List.map (fun op -> op.Register, op.CompareRegister)
     |> List.map (fun item -> [fst item; snd item])
     |> List.reduce (@)
     |> List.distinct
 
 
+let executeOp opType regVal opVal : RegisterVal =
+    let operation = 
+        match opType with
+        | Inc -> (+)
+        | Dec -> (-)
+    operation regVal opVal
+
+let getStepMap (regMap : Map<Register, RegisterVal>) (op : Op) =
+    let compReg, compOp, compVal = op.CompareRegister, op.CompareOp, op.CompareVal
+    let compRegActual = regMap.[compReg]
+    let shouldChange = (compareOpToCondition compOp) compRegActual compVal
+    if shouldChange then
+        let reg = op.Register
+        let regVal = regMap.[reg]
+        let newVal = executeOp op.OpType regVal op.OpVal
+        regMap.Add(reg, newVal)
+    else
+        regMap
+
+
+let executeRegisters registers (ops : Op list) : (Register * RegisterVal) list =
+    let mapList = List.map (fun reg -> reg, 0) registers
+    let map = new Map<Register, RegisterVal>(mapList)
+    let rec iterOps map ops =
+        match ops with
+        | op :: restOps ->
+            let newMap = getStepMap map op
+            iterOps newMap restOps
+        | [] ->
+            Map.toList map
+            
+    iterOps map ops
+
+
 
 let main =
-    //let map = new Map<Register, RegisterVal>()
     let ops =
         getLines "./day8.txt"
         |> List.map lineToOp
 
     let registers = getAllRegisters ops
-    registers.Length
+    //registers.Length
+    let newRegisters = executeRegisters registers ops
+    List.maxBy snd newRegisters
+    |> fst
     
