@@ -50,14 +50,7 @@ type Op =
         CompareVal: RegisterVal
     }
 
-let lineToOp line =
-    let reg =
-        "^(\w{1,3}) (inc|dec) (-?\d+) if (\w{1,3}) (>|<|>=|<=|==|!=) (-?\d+)$"
-    let mat = Regex.Match(line, reg)
-    let getGr (i : int) = mat.Groups.[i].Value
-    let register, opType, opVal, condReg, compareOp, compareVal =
-        getGr 1, getOp (getGr 2), int (getGr 3), getGr 4, getCompareOp (getGr 5), int (getGr 6)
-    
+let makeOp register opType opVal condReg compareOp compareVal =
     {
         Register = register
         OpType = opType
@@ -66,7 +59,16 @@ let lineToOp line =
         CompareOp = compareOp
         CompareVal = compareVal
     }
+
+let lineToOp line =
+    let reg =
+        "^(\w{1,3}) (inc|dec) (-?\d+) if (\w{1,3}) (>|<|>=|<=|==|!=) (-?\d+)$"
+    let mat = Regex.Match(line, reg)
+    let getGr (i : int) = mat.Groups.[i].Value
+    let register, opType, opVal, condReg, compareOp, compareVal =
+        getGr 1, getOp (getGr 2), int (getGr 3), getGr 4, getCompareOp (getGr 5), int (getGr 6)
     
+    makeOp register opType opVal condReg compareOp compareVal
 
 
 let getAllRegisters ops : Register list =
@@ -97,7 +99,7 @@ let getStepMap (regMap : Map<Register, RegisterVal>) (op : Op) =
         regMap
 
 
-let executeRegisters registers (ops : Op list) : (Register * RegisterVal) list =
+let executeRegisters registers ops : (Register * RegisterVal) list =
     let mapList = List.map (fun reg -> reg, 0) registers
     let map = new Map<Register, RegisterVal>(mapList)
     let rec iterOps map ops =
@@ -111,15 +113,36 @@ let executeRegisters registers (ops : Op list) : (Register * RegisterVal) list =
     iterOps map ops
 
 
+let ops =
+    getLines "./day8.txt"
+    |> List.map lineToOp
+
+let registers = getAllRegisters ops
+
 
 let main =
-    let ops =
-        getLines "./day8.txt"
-        |> List.map lineToOp
-
-    let registers = getAllRegisters ops
-    //registers.Length
     let newRegisters = executeRegisters registers ops
     List.maxBy snd newRegisters
-    |> fst
+    |> snd
     
+
+let executeRegistersGetMax registers ops =
+    let mapList = List.map (fun reg -> reg, 0) registers
+    let map = new Map<Register, RegisterVal>(mapList)
+    let rec iterOps map ops max =
+        match ops with
+        | op :: restOps ->
+            let newMap = getStepMap map op
+            let highest = 
+                Map.toList newMap
+                |> List.map snd
+                |> (@) [max]
+                |> List.max
+            iterOps newMap restOps highest
+        | [] ->
+            max
+            
+    iterOps map ops 0
+
+let part2 =
+    executeRegistersGetMax registers ops
