@@ -1,4 +1,4 @@
-﻿// http://adventofcode.com/2017/day/9
+﻿// https://adventofcode.com/2017/day/9
 
 module Day9
 
@@ -28,8 +28,7 @@ let countGroups input =
         | [] -> completed
     traverser 0 0 <| Seq.toList (deleteGarbage input)
 
-let main =
-    countGroups chars
+let main = countGroups chars
 
 
 
@@ -37,7 +36,7 @@ let main =
 let countGarbage input =
     let str = deleteCancelleds input
     let matches = Regex.Matches(str, "<[^>]*>")
-    let matchSeq = seq { for m in matches -> m}
+    let matchSeq = seq { for m in matches -> m }
     Seq.map (fun (m : Match) -> m.Length - 2) matchSeq
     |> Seq.sum
 
