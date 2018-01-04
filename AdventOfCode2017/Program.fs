@@ -24,6 +24,8 @@ let main argv =
     
     Day9.main |> printf "Day 9: %i\n"
     Day9.part2 |> printf "Day 9 part 2: %i\n"
+    
+    Day10.main |> printf "Day 10: %A\n"
 
     System.Console.ReadLine() |> ignore
     0
