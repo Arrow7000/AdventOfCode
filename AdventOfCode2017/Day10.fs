@@ -4,16 +4,17 @@ module Day10
 
 open Commons
 
-type Length = int
-type HashNum = int
+type PuzzleInputItem = int
+type StringNumber = int
+type Index = int
 
-let getLengths str : Length list =
+let getLengths str : PuzzleInputItem list =
     str
     |> strSplit ','
     |> List.map int
 
 
-let reverseSublist (indexes : int list) (list : 'a list) =
+let reverseSublist (indexes : Index list) (list : 'a list) =
     let toRev =
         indexes
         |> List.map (fun i -> list.[i])
@@ -29,25 +30,28 @@ let reverseSublist (indexes : int list) (list : 'a list) =
                     hashChar)
     replaced
 
-let hasherGen (listLen : int) (input : Length list) =
-    let rec iterator (currPos : int) (skipSize : int) (hashList : HashNum list) (remainingInput : Length list) =
-        match remainingInput with
-        | [] -> hashList
-        | hash :: rest ->
-            let listLen = List.length hashList
-            let indexes = 
-                [0..(hash - 1)]
-                |> List.map (fun i -> (i + currPos) % listLen)
-            let replaced = reverseSublist indexes hashList
+let rec hashIterator (currPos : int) (skipSize : int) (stringCirc : StringNumber list) (remainingInput : PuzzleInputItem list) =
+    match remainingInput with
+    | [] -> stringCirc
+    | puzzleItem :: rest ->
+        let listLen = List.length stringCirc
+        let indexes = 
+            [0..(puzzleItem - 1)]
+            |> List.map (fun i -> (i + currPos) % listLen)
+        let replaced = reverseSublist indexes stringCirc
             
-            let newCurrPos = (currPos + 1 + hash + skipSize) % listLen
-            iterator newCurrPos (skipSize + 1) replaced rest
+        let newCurrPos = (currPos + puzzleItem + skipSize) % listLen
+        hashIterator newCurrPos (skipSize + 1) replaced rest
 
+let hasherGen (listLen : int) (input : PuzzleInputItem list) =
+    hashIterator 0 0 [0..(listLen - 1)] input
 
-    iterator 0 0 [0..(listLen - 1)] input
 
 let main =
-    "157,222,1,2,177,254,0,228,159,140,249,187,255,51,76,30"
-    |> strSplit ','
-    |> List.map int
-    |> (hasherGen 256)
+    let output =
+        "157,222,1,2,177,254,0,228,159,140,249,187,255,51,76,30"
+        |> strSplit ','
+        |> List.map int
+        |> hasherGen 256
+    output.[0] * output.[1]
+

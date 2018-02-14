@@ -37,6 +37,38 @@ let ``Reverse sublist``() =
 
 
 [<Fact>]
+let ``Test hashIterator step 1``() =
+    let input = [3; 4; 1; 5]
+    let result = hashIterator 0 0 [0..4] <| List.take 1 input
+    let expected = [2; 1; 0; 3; 4]
+
+    test <@ result = expected @>
+
+[<Fact>]
+let ``Test hashIterator step 2``() =
+    let input = [3; 4; 1; 5]
+    let result = hashIterator 0 0 [0..4] <| List.take 2 input
+    let expected = [4; 3; 0; 1; 2]
+
+    test <@ result = expected @>
+
+[<Fact>]
+let ``Test hashIterator step 3``() =
+    let input = [3; 4; 1; 5]
+    let result = hashIterator 0 0 [0..4] <| List.take 3 input
+    let expected = [4; 3; 0; 1; 2]
+
+    test <@ result = expected @>
+
+[<Fact>]
+let ``Test hashIterator step 4``() =
+    let input = [3; 4; 1; 5]
+    let result = hashIterator 0 0 [0..4] <| List.take 4 input
+    let expected = [3; 4; 2; 1; 0]
+
+    test <@ result = expected @>
+
+[<Fact>]
 let ``Test hasher``() =
     let hasher = hasherGen 5
     let lengths = [3; 4; 1; 5]
