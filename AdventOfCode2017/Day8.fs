@@ -73,8 +73,7 @@ let lineToOp line =
 
 let getAllRegisters ops : Register list =
     ops
-    |> List.map (fun op -> op.Register, op.CompareRegister)
-    |> List.map (fun item -> [fst item; snd item])
+    |> List.map ((fun op -> op.Register, op.CompareRegister) >> (fun item -> [fst item; snd item]))
     |> List.reduce (@)
     |> List.distinct
 
