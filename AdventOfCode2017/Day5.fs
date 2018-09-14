@@ -3,9 +3,11 @@
 module Day5
 
 open System.IO
+open Commons
 
 let steps () = 
-    File.ReadAllLines "./day5.txt"
+    getLines "day5.txt"
+    |> Array.ofList
     |> Array.map int
 
 let replaceArray i item (array : 'a[]) =

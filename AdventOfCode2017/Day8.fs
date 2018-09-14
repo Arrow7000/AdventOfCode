@@ -113,7 +113,7 @@ let executeRegisters registers ops : (Register * RegisterVal) list =
 
 
 let ops =
-    getLines "./day8.txt"
+    getLines "day8.txt"
     |> List.map lineToOp
 
 let registers = getAllRegisters ops

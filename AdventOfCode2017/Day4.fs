@@ -3,13 +3,13 @@
 module Day4
 
 open System.IO
+open Commons
 
 type Word = string
 type Line = Word list
 
 let lines : Line list = 
-    File.ReadAllLines "./day4.txt" 
-    |> Array.toList
+    getLines "day4.txt" 
     |> List.map ((fun str -> str.Split [|' '|]) >> Array.toList)
 
 let uniqueWords (words : Line) = 

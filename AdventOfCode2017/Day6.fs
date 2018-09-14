@@ -3,11 +3,12 @@
 module Day6
 
 open System.IO
+open Commons
 
 type Blocks = int
 
 let banks: Blocks list = 
-    File.ReadAllText "./day6.txt"
+    getText "day6.txt"
     |> (fun str -> str.Split([|'\t'|]))
     |> Array.map int
     |> Array.toList

@@ -6,7 +6,7 @@ open Commons
 open System.Text.RegularExpressions
 
 
-let chars = getText "./day9.txt"
+let chars = getText "day9.txt"
 
 let deleteCancelleds input =
     Regex.Replace(input, "!.", "")

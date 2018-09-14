@@ -2,6 +2,7 @@
 
 module Day2
 
+open Commons
 open System.IO
 open System.Security.Cryptography.X509Certificates
 
@@ -14,8 +15,8 @@ let rowToInts (row : string) =
     |> List.map int
 
 let rows = 
-    File.ReadAllLines "./day2.tsv" 
-    |> Array.toList
+    "day2.tsv"
+    |> getLines
     |> List.map rowToInts
 
 let main = 

@@ -1,9 +1,9 @@
 ﻿// http://adventofcode.com/2017/day/7
 
 module Day7
-open System.IO
 open System
 open System.Text.RegularExpressions
+open Commons
 
 type Name = string
 type Weight = int
@@ -29,11 +29,6 @@ let makeEntry name weight children = { name = name; weight = weight; children = 
 let getOwnWeight entry = entry.ownWeight
 let getTotalWeight entry = entry.totalWeight
 
-let getLines file =
-    File.ReadAllLines file
-    |> Array.toList
-
-    
 let (|LineEntryMatch|_|) line =
     let regMatch = Regex.Match (line, "(\w+) \((\d+)\)(?: -> ([\w, ]+))?")
     if not regMatch.Success then
@@ -109,7 +104,7 @@ let constructWholeTree map (entries : SimpleEntry list) =
 
 let main =
     let entries =
-        getLines "./day7.txt"
+        getLines "day7.txt"
         |> List.map parseLineToEntry
         |> List.choose id
     let map = constructEntryMap entries
@@ -169,7 +164,7 @@ let getUnBalanced (tree : TreeEntry) =
 
 let part2 =
     let entries =
-        getLines "./day7.txt"
+        getLines "day7.txt"
         |> List.map parseLineToEntry
         |> List.choose id
     let map = constructEntryMap entries
