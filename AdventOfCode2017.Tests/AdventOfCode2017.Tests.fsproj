@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
+    <ProjectReference Include="..\AdventOfCode2017\AdventOfCode2017.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Day1Test.fs" />
+    <Compile Include="Day2Test.fs" />
     <Compile Include="Day3Test.fs" />
     <Compile Include="Day5Test.fs" />
     <Compile Include="Day6Test.fs" />
@@ -16,16 +17,10 @@
     <Compile Include="Day10Test.fs" />
     <Compile Include="Day11Test.fs" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
     <PackageReference Include="Unquote" Version="4.0.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AdventOfCode2017\AdventOfCode2017.fsproj" />
-  </ItemGroup>
-
 </Project>

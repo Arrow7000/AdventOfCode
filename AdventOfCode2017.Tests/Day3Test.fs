@@ -1,4 +1,4 @@
-﻿namespace Day3
+﻿namespace Day3Test
 
 open Swensen.Unquote
 open Xunit
