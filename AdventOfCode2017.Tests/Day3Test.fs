@@ -160,3 +160,7 @@ module Solutions =
     [<Fact>]
     let ``Solution part 1`` () =
         test <@ main = 475 @>
+
+    [<Fact>]
+    let ``Solution part 2`` () =
+        test <@ part2 = 279138 @>
