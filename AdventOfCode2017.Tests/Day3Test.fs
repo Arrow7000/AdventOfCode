@@ -155,3 +155,8 @@ module Misc =
 
         let dist2 = taxiDist (-17, 31)
         test <@ dist2 = 48 @>
+
+module Solutions =
+    [<Fact>]
+    let ``Solution part 1`` () =
+        test <@ main = 475 @>
