@@ -3,15 +3,13 @@
 module Day2
 
 open Commons
-open System.IO
-open System.Security.Cryptography.X509Certificates
 
 let rowDiff (row : int list) =
     (List.max row) - (List.min row) |> abs
 
 let rowToInts (row : string) =
-    row.Split [|'\t'|]
-    |> Array.toList
+    row
+    |> strSplit '\t'
     |> List.map int
 
 let rows = 
@@ -21,8 +19,7 @@ let rows =
 
 let main = 
     rows
-    |> List.map rowDiff
-    |> List.sum
+    |> List.sumBy rowDiff
 
 
 let divideEachOther a b =
@@ -34,10 +31,11 @@ let divideEachOther a b =
     let left = fB / fA
     let rightInt = floor right
     let leftInt = floor left
+    let intSome = int >> Some
     if rightInt = right then
-        Some <| int rightInt
+        intSome <| rightInt
     else if leftInt = left then
-        Some <| int leftInt
+        intSome <| leftInt
     else None
 
 let divideDivisibles row =
@@ -47,5 +45,4 @@ let divideDivisibles row =
 
 let part2 = 
     rows
-    |> List.map divideDivisibles
-    |> List.sum
+    |> List.sumBy divideDivisibles

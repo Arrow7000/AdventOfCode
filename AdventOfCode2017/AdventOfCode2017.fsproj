@@ -6,6 +6,9 @@
   <ItemGroup>
     <Compile Include="Commons.fs" />
     <Compile Include="Day1.fs" />
+    <Content Include="day2.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Day2.fs" />
     <Compile Include="Day3.fs" />
     <Content Include="day4.txt">
