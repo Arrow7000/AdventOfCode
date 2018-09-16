@@ -17,6 +17,8 @@ let main argv =
     Day5.main () |> printf "Day 5: %i\n"
     Day5.part2 () |> printf "Day 5 part 2: %i\n"
 
+    Day6.part1 |> printf "Day 6: %i\n"
+
     Day7.main |> printf "Day 7: %s\n"
     Day7.part2 |> printf "Day 7 part 2: %i\n"
 
