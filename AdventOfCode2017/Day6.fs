@@ -53,3 +53,21 @@ let redistributeUntilRepeat banks =
 
 
 let part1 = redistributeUntilRepeat banks
+
+
+
+
+let redistributeUntilRepeatWithDistance banks =
+    let rec repeater stateMap banks =
+        let newBanks = takeAndDistribute banks
+        match Map.tryFind newBanks stateMap with
+        | Some count -> count + 1
+        | None ->
+            let newMap =
+                stateMap
+                |> Map.map (fun _ value -> value + 1)
+                |> Map.add newBanks 0
+            repeater newMap newBanks
+    repeater Map.empty banks
+
+let part2 = redistributeUntilRepeatWithDistance banks

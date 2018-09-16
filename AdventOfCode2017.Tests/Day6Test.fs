@@ -50,3 +50,6 @@ let ``in tie distribute picks first ocurring bank``() =
 
 [<Fact>]
 let ``Solution part 1`` () = test <@ part1 = 6681 @>
+
+[<Fact>]
+let ``Solution part 2`` () = test <@ part2 = 2392 @>
