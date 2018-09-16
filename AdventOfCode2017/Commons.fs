@@ -1,8 +1,15 @@
 ﻿module Commons
 
 open System.IO
+open System.Reflection
 
-let inPath file = "./AdventOfCode2017/" + file
+let inPath file =
+    let sep = Path.DirectorySeparatorChar.ToString()
+    let fullPath = 
+        Assembly.GetCallingAssembly().Location
+        |> Path.GetDirectoryName 
+        |> fun dir -> dir + sep + file
+    fullPath
 
 let getLines =
     inPath
