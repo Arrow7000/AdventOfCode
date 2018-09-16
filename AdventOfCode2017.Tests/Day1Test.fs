@@ -21,4 +21,4 @@ let ``Halfway solution`` ((input, solution) : string * int) =
     test <@ expected = solution @>
 
 [<Fact>]
-let ``Solution part 2`` () = test <@ main = 1220 @>
+let ``Solution part 2`` () = test <@ part2 = 1220 @>
