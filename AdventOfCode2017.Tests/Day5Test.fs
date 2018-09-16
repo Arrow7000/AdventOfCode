@@ -13,3 +13,11 @@ let ``Replace works as expected``() =
 
     let replaced2 = replaceArray 4 9 (orig())
     test <@ replaced2 = List.toArray [0; 1; 2; 3; 9] @>
+
+[<Fact>]
+let ``Solution part 1`` () =
+    test <@ main() = 339351 @>
+
+[<Fact>]
+let ``Solution part 2`` () =
+    test <@ part2() = 24315397 @>
