@@ -17,6 +17,7 @@
     <Compile Include="Day9Test.fs" />
     <Compile Include="Day10Test.fs" />
     <Compile Include="Day11Test.fs" />
+    <Compile Include="Day12Test.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />

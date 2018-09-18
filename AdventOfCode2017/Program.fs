@@ -30,5 +30,7 @@ let main argv =
     Day9.part2 |> printfn "Day 9 part 2: %i"
     
     Day10.main |> printfn "Day 10: %A"
+    
+    Day12.part1 |> printfn "Day 12: %i"
     printfn "All Finished!"
     0
