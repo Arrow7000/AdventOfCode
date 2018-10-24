@@ -23,7 +23,7 @@ let initialLayer depth : Layer = depth, 0, Down
 let advanceScanner ((depth, scannerPos, dir) : Layer) : Layer =
     match scannerPos with
     | 0 -> depth, 1, Down
-    | pos when pos >= depth - 1 -> depth, 1, Up
+    | pos when pos >= depth - 1 -> depth, pos - 1, Up
     | pos ->
         match dir with
         | Up -> depth, pos - 1, dir
@@ -46,14 +46,11 @@ let getGameEnd (firewall : Firewall) : Severity =
             let inLayer = Map.tryFind packet firewall
             match inLayer with
             | None ->
-                printfn "No scanner in this layer! %i" severity
                 gameStepper (packet + 1, advanceFirewall firewall, severity)
             | Some (depth, scannerPos, _) ->
                 if scannerPos <> 0 then
-                    printfn "Avoided scanner! %i" severity
                     gameStepper (packet + 1, advanceFirewall firewall, severity)
                 else
-                    printfn "Hit scanner! %i" severity
                     gameStepper (packet + 1, advanceFirewall firewall, severity + (depth * packet))
 
 
